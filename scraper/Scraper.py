@@ -16,10 +16,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
-HOST = config('HOST')
-DBUSER = config('DBUSER')
-PASSWORD = config('PASSWORD')
-DATABASE = config('DATABASE')
+HOST = 'mysqldb'
+DBUSER = config('MYSQL_USER')
+PASSWORD = config('MYSQL_PASSWORD')
+DATABASE = config('MYSQL_DATABASE')
 GOOGLE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json?address="
 PROVINCE = "Ontario"
 RESOURCE_API = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=da46e4ac-d4ab-4b1c-b139-6362a0a43b3c"
