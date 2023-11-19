@@ -79,10 +79,10 @@ public class FacilityFacade extends GenericFacade{
 			//cacheContents(path, facilityContents, contents); 
 		//}
 		
-		if (sortBy.equals("distance")) {
-			contents.sort(Comparator.comparingDouble(FacilityContent::getDistance));
-		} else if (sortBy.equals("title") || sortBy == null) {
+		if (sortBy.equals("title") || sortBy == null) {
 			sortByDefault(contents);
+		} else if (sortBy.equals("distance")) {
+			contents.sort(Comparator.comparingDouble(FacilityContent::getDistance));
 		}
 		
 		PaginatedContent<FacilityContent> paginatedContents = paginateContents(contents, page, size);

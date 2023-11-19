@@ -104,7 +104,6 @@ public class FacilityLogic extends GenericLogic<FacilityContent, Facility, Facil
 				facilityContent.setTitle(i.getDescription());
 			}
 		});
-		System.out.println(facilityContent.getTitle());
 		facilityContent.setUrl(full.getUrl());
 		facilityContent.setAddress(AddressLogic.getInstance().getContent(full.getAddress(), lang));
 		return facilityContent;

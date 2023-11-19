@@ -48,7 +48,6 @@ public abstract class GenericController<T> extends HttpServlet{
 		if (request.getParameter("lng") != null) {
 			ClientSettings.setClientLatitude(Double.parseDouble(request.getParameter("lng")));
 		}
-		System.out.println(request.getQueryString());
 	}
 	
 	
