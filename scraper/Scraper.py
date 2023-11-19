@@ -340,8 +340,10 @@ def facility_exists(location_id: int):
     cursor.execute(FIND_FACILITY_BY_LOCATION_ID, (location_id,))
     rows = cursor.fetchall()
     if len(rows) != 0:
-        facility_id = rows[0]
+        facility_id = rows[0][0]
+        print(facility_id)
     cursor.close()
+    
     return facility_id
 
 
@@ -382,7 +384,7 @@ def get_new_facilities(facilities):
     logger.info("Getting new facilities...")
     new_facilities = []
     for facility in facilities:
-        if facility_exists(int(facility["location_id"])) == None:
+        if facility_exists(int(facility["location_id"])) != 0:
             new_facilities.append(facility)
     return new_facilities
 
