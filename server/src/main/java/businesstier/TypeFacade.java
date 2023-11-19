@@ -3,6 +3,7 @@ package businesstier;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -39,42 +40,42 @@ public class TypeFacade extends GenericFacade{
 	}
 	
 	public PaginatedContent<TypeContent> processGetAll(String path, String sortBy, String lang, int page, int size) throws IOException {
-		List<TypeContent> contents = searchContents(path, typeContents);
-		if ( contents == null) {
+		List<TypeContent> contents = new ArrayList<>();
+		//if ( contents == null) {
 			contents = typeLogic.getAllContents(lang);
-		}
+		//}
 
 		if (sortBy == null) {
 			sortByDefault(contents);
 		} else if (sortBy.equals("popular")) {
 			contents.sort(Comparator.comparingInt(TypeContent::getActivityNum).reversed());
 		}
-		cacheContents(path, typeContents, contents);
+		//cacheContents(path, typeContents, contents);
 		PaginatedContent<TypeContent> paginatedContent = paginateContents(contents, page,size);
 		return paginatedContent;
 	}
 	
 	
 	public PaginatedContent<FacilityContent> processGetFacilitiesWithType(String path, String lang, int page, int size) throws IOException {
-		List<FacilityContent> contents = searchContents(path, facilityContents);
-		if (contents == null) {
+		List<FacilityContent> contents = new ArrayList<>();
+		//if (contents == null) {
 			int typeId = Integer.parseInt(path.split("/")[1]);
 			contents = facilityLogic.getContentsWithTypeId(typeId, lang);
-		}
+		//}
 		
 		sortByDefault(contents);
 		PaginatedContent<FacilityContent> paginatedContent = paginateContents(contents, page,size);
-		cacheContents(path, facilityContents, contents);
+		//cacheContents(path, facilityContents, contents);
 		return paginatedContent;
 	}
 	
 	public PaginatedContent<AvailabilityContent> processGetActivitesWithType(String path, String sortBy, String time, String lang, int page, int size) throws IOException {
-		List<AvailabilityContent> contents = searchContents(path, activityContents);
-		if (contents == null) {
+		List<AvailabilityContent> contents = new ArrayList<>();
+		//if (contents == null) {
 			int typeId = Integer.parseInt(path.split("/")[1]);
 			contents = activityLogic.getContentsWithTypeId(typeId, lang);
-			cacheContents(path, activityContents, contents);
-		}
+			//cacheContents(path, activityContents, contents);
+		//}
 		
 		if (sortBy == null) {
 			sortByDefault(contents);

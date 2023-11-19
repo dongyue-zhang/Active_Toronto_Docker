@@ -42,14 +42,14 @@ public class FacilityFacade extends GenericFacade{
 	
 	
 	public PaginatedContent<FacilityContent> processGetWithType(String path, String lang, int page, int size) throws IOException {
-		List<FacilityContent> contents = searchContents(path, facilityContents);
-		if ( contents == null) {
+		List<FacilityContent> contents = new ArrayList<>();
+//		if ( contents == null) {
 			int typeId = Integer.parseInt(path.split("/")[3]);
 			contents =  facilityLogic.getContentsWithTypeId(typeId, lang);
-		}
+		//}
 		sortByDefault(contents);
 		PaginatedContent<FacilityContent> paginatedContents = paginateContents(contents, page, size);
-		cacheContents(path, facilityContents, contents);
+		//cacheContents(path, facilityContents, contents);
 		return paginatedContents;
 	
 	}
@@ -61,27 +61,27 @@ public class FacilityFacade extends GenericFacade{
 	}
 	
 	public PaginatedContent<TypeContent> processGetAllTypesWithId(String path, String lang, int page, int size) throws IOException {
-		List<TypeContent> contents = searchContents(path, typeContents);
-		if ( contents == null) {
+		List<TypeContent> contents = new ArrayList<>();
+		//if ( contents == null) {
 			int facilityId = Integer.parseInt(path.split("/")[1]);
 			contents =  typeLogic.getContentWithFacilityId(facilityId, lang);
-		}
+		//}
 		sortByDefault(contents);
 		PaginatedContent<TypeContent> paginatedContents = paginateContents(contents, page, size);
-		cacheContents(path, typeContents, contents);
+		//cacheContents(path, typeContents, contents);
 		return paginatedContents;
 	}
 	
 	public PaginatedContent<FacilityContent> processGetAll(String path, String sortBy, String lang, int page, int size) throws IOException {
-		List<FacilityContent> contents = searchContents(path, facilityContents);
-		if ( contents == null) {
+		List<FacilityContent> contents = new ArrayList<>();
+		//if ( contents == null) {
 			contents = facilityLogic.getAllContents(lang);
-			cacheContents(path, facilityContents, contents);
-		}
+			//cacheContents(path, facilityContents, contents); 
+		//}
 		
 		if (sortBy.equals("distance")) {
 			contents.sort(Comparator.comparingDouble(FacilityContent::getDistance));
-		} else if (sortBy.equals("title")) {
+		} else if (sortBy.equals("title") || sortBy == null) {
 			sortByDefault(contents);
 		}
 		
@@ -93,13 +93,13 @@ public class FacilityFacade extends GenericFacade{
 	}
 	
 	public PaginatedContent<AvailabilityContent> processGetActivitiesWithFacilityAndType(String path, String time, String lang, int page, int size) throws IOException {
-		List<AvailabilityContent> contents = searchContents(path, activityContents);
-		if (contents == null) {
+		List<AvailabilityContent> contents = new ArrayList<>();
+		//if (contents == null) {
 			int facilityId = Integer.parseInt(path.split("/")[1]);
 			int typeId = Integer.parseInt(path.split("/")[3]);
 			contents = activityLogic.getContentsWithFacilityIdAndTypeId(facilityId, typeId, lang);
-			cacheContents(path, activityContents, contents);
-		}
+//			cacheContents(path, activityContents, contents);
+//		}
 		sortByDefault(contents);
 		if (!time.isEmpty()) {
 			contents = filterAvailabilityContentByTime(time, contents);
@@ -114,21 +114,21 @@ public class FacilityFacade extends GenericFacade{
 		List<CategoryContent> contents = facilityLogic.getCategoryContentsWithFacility(facilityId, lang);
 		sortByDefault(contents);
 		PaginatedContent<CategoryContent> paginatedContents = paginateContents(contents, page, size);
-		cacheContents(path, categoryContents, contents);
+		//cacheContents(path, categoryContents, contents);
 		return paginatedContents;
 	}
 
 	public PaginatedContent<TypeContent> processGetTypesByFacilityAndCategory(String path, String lang, int page,
 			int size) {
-		List<TypeContent> contents = searchContents(path, typeContents);
-		if (contents == null) {
+		List<TypeContent> contents = new ArrayList<>();
+		//if (contents == null) {
 			int facilityId = Integer.parseInt(path.split("/")[1]);
 			int categoryId = Integer.parseInt(path.split("/")[3]);
 			contents = facilityLogic.getTypeContentsWithCategoryAndFacility(facilityId, categoryId, lang);
-		}
+		//}
 		sortByDefault(contents);
 		PaginatedContent<TypeContent> paginatedContents = paginateContents(contents, page, size);
-		cacheContents(path, typeContents, contents);
+		//cacheContents(path, typeContents, contents);
 		return paginatedContents;
 	}
 

@@ -1,6 +1,7 @@
 package businesstier;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -30,22 +31,22 @@ public class CategoryFacade extends GenericFacade{
 	}
 
 	public PaginatedContent<CategoryContent> processGetAll(String path,String lang, int page, int size) {
-		List<CategoryContent> contents = searchContents(path, categoryContent);
-		if (contents == null) {
+		List<CategoryContent> contents = new ArrayList<>();
+		//if (contents == null) {
 			 contents = categoryLogic.getAllContents(lang);
-		}
+		//}
 		sortByDefault(contents);
 		PaginatedContent<CategoryContent> paginatedContent = paginateContents(contents, page,size);
-		cacheContents(path, categoryContent, contents);
+		//cacheContents(path, categoryContent, contents);
 		return paginatedContent;
 	}
 	
 	public PaginatedContent<TypeContent> processGetTypesWithCategory(String path, String sortBy, String lang, int page, int size) throws IOException{
-		List<TypeContent> contents = searchContents(path, typeContents);
-		if (contents == null) {
+		List<TypeContent> contents = new ArrayList<>();
+		//if (contents == null) {
 			int categoryId = Integer.parseInt(path.split("/")[1]);
 			contents = typeLogic.getContentWithCategory(categoryId, lang);
-		}
+		//}
 		
 		if (sortBy == null) {
 			sortByDefault(contents);
@@ -53,7 +54,7 @@ public class CategoryFacade extends GenericFacade{
 			contents.sort(Comparator.comparingInt(TypeContent::getActivityNum).reversed());
 		}
 		
-		cacheContents(path, typeContents, contents);
+		//cacheContents(path, typeContents, contents);
 		PaginatedContent<TypeContent> paginatedContent = paginateContents(contents, page,size);
 		return paginatedContent;
 	}

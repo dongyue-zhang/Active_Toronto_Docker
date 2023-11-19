@@ -1,6 +1,7 @@
 package businesstier;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,13 +40,13 @@ public class ActivityFacade extends GenericFacade{
 	}
 	
 	public PaginatedContent<AvailabilityContent> processGetAll(String path,String lang, int page, int size) throws IOException {
-		List<AvailabilityContent> contents = searchContents(path, activityContents);
-		if ( contents == null) {
+		List<AvailabilityContent> contents = new ArrayList<>();
+		//if ( contents == null) {
 			contents = activityLogic.getAllContents(lang);
-		}
+		//}
 		sortByDefault(contents);
 		PaginatedContent<AvailabilityContent> paginatedContents = paginateContents(contents, page, size);
-		cacheContents(path, activityContents, contents);
+		//cacheContents(path, activityContents, contents);
 		return paginatedContents;
 	}
 
