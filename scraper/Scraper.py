@@ -162,12 +162,12 @@ def getAvalibilities():
                 if dropin["Age Min"] != "None":
                     availability["age_min"] = dropin["Age Min"]
                 else:
-                    availability["age_min"] = ""
+                    availability["age_min"] = None
 
                 if dropin["Age Max"] != "None":
                     availability["age_max"] = dropin["Age Max"]
                 else:
-                    availability["age_max"] = ""
+                    availability["age_max"] = None
 
                 availabilities.append(availability)
         availabilities = sorted(
