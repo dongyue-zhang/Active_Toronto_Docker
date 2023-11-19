@@ -531,7 +531,7 @@ def insert_new_facility(facility):
     url = facility["url"]
     location_id = facility["location_id"]
     global city_id, country, language_id
-    global row_affected_traslation, row_affected_language_traslation, row_affected_address, row_affected_traslation, row_affected_language_traslation, row_affected_reference_facility_locationorigin
+    global row_affected_traslation, row_affected_language_traslation, row_affected_address, row_affected_traslation, row_affected_facility, row_affected_language_traslation, row_affected_reference_facility_locationorigin
 
     # insert a new row into Table Translation
     translation_id = executeInsertSQL(TRANSLATION_SQL, None)
