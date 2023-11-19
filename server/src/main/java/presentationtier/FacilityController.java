@@ -37,7 +37,7 @@ public class FacilityController extends GenericController<FacilityFacade>{
 				
 				String searchBy = request.getParameter("q");
 				PaginatedContent<FacilityContent> contents = null;
-				if (searchBy != "") {
+				if (searchBy != null) {
 					contents = facade.processSearching(searchBy, lang, page, size);
 				} else {
 					contents = facade.processGetAll(path, request.getParameter("sort"), lang, page, size);
