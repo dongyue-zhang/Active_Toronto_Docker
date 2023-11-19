@@ -122,10 +122,10 @@ def getResources():
 def getAvalibilities():
     logger.info('Extracting avalibilities from file: ' + DROPIN)
     try:
-        avalibilities = []
+        availabilities = []
         for dropin in dropins:
-            avalibility = {}
-            avalibility['start_time'] = dropin['Start Date Time']
+            availability = {}
+            availability['start_time'] = dropin['Start Date Time']
             startDatetime = datetime.strptime(
                 dropin['Start Date Time'], '%Y-%m-%dT%H:%M:%S')
             endHour = dropin['End Hour']
@@ -135,27 +135,35 @@ def getAvalibilities():
             # print(datetime.now())
             # print(datetime.strptime(endDatetimeStr, '%Y-%m-%dT%H:%M:%S') > datetime.now())
             if datetime.strptime(endDatetimeStr, '%Y-%m-%dT%H:%M:%S') > datetime.now():
-                avalibility['end_time'] = endDatetimeStr
+                availability['end_time'] = endDatetimeStr
 
-                avalibility['category'] = dropin['Category']
-                avalibility['location_id'] = dropin['Location ID']
-                avalibility['course_id'] = dropin['Course_ID']
-                avalibility['course_title'] = dropin['Course Title']
-                if ':' in avalibility['course_title']:
-                    type = avalibility['course_title'].split(':')[0].strip()
-                elif '(' in avalibility['course_title']:
-                    type = avalibility['course_title'].split('(')[0].strip()
-                elif '-' in avalibility['course_title']:
-                    type = avalibility['course_title'].split('-')[0].strip()
+                availability['category'] = dropin['Category']
+                availability['location_id'] = dropin['Location ID']
+                availability['course_id'] = dropin['Course_ID']
+                availability['course_title'] = dropin['Course Title']
+                if ':' in availability['course_title']:
+                    type = availability['course_title'].split(':')[0].strip()
+                elif '(' in availability['course_title']:
+                    type = availability['course_title'].split('(')[0].strip()
+                elif '-' in availability['course_title']:
+                    type = availability['course_title'].split('-')[0].strip()
                 else:
-                    type = avalibility['course_title']
-                avalibility['type'] = type
-                avalibility['age_min'] = dropin['Age Min']
-                avalibility['age_max'] = dropin['Age Max']
+                    type = availability['course_title']
+                availability['type'] = type
+                if dropin['Age Min'] != 'None':
+                    availability['age_min'] = dropin['Age Min']
+                else 
+                    availability['age_min'] = ''
+               
+                if dropin['Age Max'] != 'None'
+                    availability['age_max'] = dropin['Age Max']
+                else 
+                    availability['age_max'] = ''
+                
 
-                avalibilities.append(avalibility)
-        avalibilities = sorted(avalibilities, key=lambda x: (x['category'], x['type'], x['course_title'], x['location_id']))
-        return avalibilities
+                availabilities.append(availability)
+        availabilities = sorted(availabilities, key=lambda x: (x['category'], x['type'], x['course_title'], x['location_id']))
+        return availabilities
     except (Exception) as e:
         logger.warning(e)
 
