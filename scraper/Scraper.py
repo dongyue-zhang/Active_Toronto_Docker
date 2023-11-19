@@ -340,7 +340,7 @@ def facility_exists(location_id: int):
     cursor.execute(FIND_FACILITY_BY_LOCATION_ID, (location_id,))
     rows = cursor.fetchall()
     if len(rows) != 0:
-        facility_id = rows[0][0]
+        facility_id = rows[0]
     cursor.close()
     return facility_id
 
