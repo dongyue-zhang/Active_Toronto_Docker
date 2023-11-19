@@ -4,9 +4,6 @@
 <hibernate-configuration>
  <session-factory>
   <property name="hibernate.connection.datasource">java:/comp/env/jdbc/Active_v2</property>
-  <!--   <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/active_v2?zeroDateTimeBehavior=convertToNull</property>
-  <property name="hibernate.connection.username">root</property>
-  <property name="hibernate.connection.password">zdy15994357865</property> -->
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <property name="hibernate.show_sql">false</property>
   <property name="format_sql">true</property>
