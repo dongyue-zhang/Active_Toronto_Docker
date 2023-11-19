@@ -159,7 +159,7 @@ CREATE TABLE `address` (
   `STREET_TRANSLATION_ID` int NOT NULL,
   `CITY` varchar(45) NOT NULL,
   `PROVINCE` varchar(45) NOT NULL,
-  `POSTAL_CODE` char(6) NOT NULL,
+  `POSTAL_CODE` varchar(10) NOT NULL,
   `COUNTRY` varchar(45) NOT NULL,
   `LONGITUDE` double(8,6) NOT NULL,
   `LATITUDE` double(8,6) NOT NULL,

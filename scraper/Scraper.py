@@ -525,10 +525,8 @@ def insert_new_facility(facility):
     city = facility["city"]
     province = facility["province"]
     postal_code = facility["postal_code"].replace(" ", "")
-    # lat = facility["lat"]
-    # lng = facility["lng"]
-    lat = 0
-    lng = 0
+    lat = facility["lat"]
+    lng = facility["lng"]
     phone = facility["phone"]
     url = facility["url"]
     location_id = facility["location_id"]
