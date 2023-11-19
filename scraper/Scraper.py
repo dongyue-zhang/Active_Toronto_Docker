@@ -1,18 +1,19 @@
-import requests
-import json
-from datetime import datetime
-import os
+import argparse
 import io
-from decouple import config
+import json
+import logging
+import os
+import time
+from datetime import datetime
+
+import mysql.connector as MySQL
+import pandas as pd
+import requests
+import schedule
 from bs4 import BeautifulSoup
+from decouple import config
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-import pandas as pd
-import time
-import mysql.connector as MySQL
-import logging
-import argparse
-import schedule
 
 DBUSER = config('MYSQL_USER')
 PASSWORD = config('MYSQL_PASSWORD')
@@ -89,7 +90,7 @@ def getResources():
     try:
         r = requests.get(url=RESOURCE_API, params=params)
         response = r.json()
-    except (ConnextionError, Exception) as e:
+    except (ConnectionError, Exception) as e:
         logger.warning(('Could not get resources from {}:'.format(RESOURCE_API)))
         logger.warning(e)
 
