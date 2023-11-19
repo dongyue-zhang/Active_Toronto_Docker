@@ -15,11 +15,11 @@ from decouple import config
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
-DBUSER = config("MYSQL_USER")
-PASSWORD = config("MYSQL_PASSWORD")
-DATABASE = config("MYSQL_DATABASE")
-GOOGLE_API_KEY = config("GOOGLE_API_KEY")
-HOST = "mysqldb"
+GOOGLE_API_KEY = config('GOOGLE_API_KEY')
+HOST = config('HOST')
+DBUSER = config('DBUSER')
+PASSWORD = config('PASSWORD')
+DATABASE = config('DATABASE')
 GOOGLE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json?address="
 PROVINCE = "Ontario"
 RESOURCE_API = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=da46e4ac-d4ab-4b1c-b139-6362a0a43b3c"
@@ -141,8 +141,7 @@ def getAvalibilities():
             endMin = dropin["End Min"]
             endDatetime = startDatetime.replace(hour=endHour, minute=endMin)
             endDatetimeStr = endDatetime.strftime("%Y-%m-%dT%H:%M:%S")
-            # print(datetime.now())
-            # print(datetime.strptime(endDatetimeStr, '%Y-%m-%dT%H:%M:%S') > datetime.now())
+            
             if datetime.strptime(endDatetimeStr, "%Y-%m-%dT%H:%M:%S") > datetime.now():
                 availability["end_time"] = endDatetimeStr
 
@@ -341,7 +340,6 @@ def facility_exists(location_id: int):
     rows = cursor.fetchall()
     if len(rows) != 0:
         facility_id = rows[0][0]
-        print(facility_id)
     cursor.close()
     
     return facility_id
@@ -384,7 +382,7 @@ def get_new_facilities(facilities):
     logger.info("Getting new facilities...")
     new_facilities = []
     for facility in facilities:
-        if facility_exists(int(facility["location_id"])) != 0:
+        if facility_exists(int(facility["location_id"])) == 0:
             new_facilities.append(facility)
     return new_facilities
 
@@ -397,6 +395,7 @@ def update_db(availabilities, facilities):
         if len(facilities) != 0:
             for facility in facilities:
                 insert_new_facility(facility)
+        mydb.commit()
 
         store_new_availabilities(availabilities)
 
@@ -455,6 +454,7 @@ def insert_data_to_empty_db(availablities, facilities):
             facility_current = availablity["location_id"]
             activity_id = availablity["course_id"]
 
+            
             # for facility in facilities:
             #     if facility['location_id'] == facility_current:
             #         facility_id = facility['facility_id']
@@ -504,7 +504,7 @@ def store_new_availabilities(availabilities):
                 availability["course_title"],
                 availability["course_id"],
                 type_id,
-                facility_id,
+                facility_id
             )
 
         insert_new_availability(availability, facility_id, activity_id)
@@ -525,8 +525,10 @@ def insert_new_facility(facility):
     city = facility["city"]
     province = facility["province"]
     postal_code = facility["postal_code"].replace(" ", "")
-    lat = facility["lat"]
-    lng = facility["lng"]
+    # lat = facility["lat"]
+    # lng = facility["lng"]
+    lat = 0
+    lng = 0
     phone = facility["phone"]
     url = facility["url"]
     location_id = facility["location_id"]
