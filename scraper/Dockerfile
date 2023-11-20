@@ -1,19 +1,13 @@
 FROM python:latest
 WORKDIR /usr/src/app
-RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
-    mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
-    curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
-    unzip -qq /tmp/chromedriver_linux64.zip -d /opt/chromedriver-$CHROMEDRIVER_VERSION && \
-    rm /tmp/chromedriver_linux64.zip && \
-    chmod +x /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver && \
-    ln -fs /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver /usr/local/bin/chromedriver
 
-# Install Google Chrome
-RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
-    apt-get -yqq update && \
-    apt-get -yqq install google-chrome-stable && \
-    rm -rf /var/lib/apt/lists/*
+# Install Firefox driver
+RUN apt-get update                             \
+ && apt-get install -y --no-install-recommends \
+    ca-certificates curl firefox-esr           \
+ && rm -fr /var/lib/apt/lists/*                \
+ && curl -L https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz | tar xz -C /usr/local/bin \
+ && apt-get purge -y ca-certificates curl
 COPY . ./
 RUN pip install -r ./requirements.txt
 CMD ["python", "./Scraper.py"]

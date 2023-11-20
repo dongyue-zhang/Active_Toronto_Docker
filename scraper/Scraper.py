@@ -13,7 +13,7 @@ import schedule
 from bs4 import BeautifulSoup
 from decouple import config
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.firefox.service import Service
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
 HOST = 'mysqldb'
@@ -269,18 +269,19 @@ def getGeo(facility):
 
 
 def getPhoneUrlToFacilities(facilities):
+    facility['phone'] = None
+    facility['url'] = None
     logger.info("Start getting phone numbers and urls for facilities...")
     try:
         # get recreation list
         logger.info("Getting recreation list from {}".format(FACILITY_LIST_URL))
-        option = webdriver.ChromeOptions()
+        option = webdriver.FirefoxOptions()
         service = Service()
         option.add_argument("--no-sandbox")
-        option.add_argument("headless")
+        option.add_argument("--headless")
         option.add_argument("--disable-infobars")
         option.add_argument("--disable-dev-shm-usage")
-        option.add_argument("--remote-debugging-port=9222")
-        driver = webdriver.Chrome(service=service, options=option)
+        driver = webdriver.Firefox(service=service, options=option)
         driver.get(FACILITY_LIST_URL)
         time.sleep(1)
         html = driver.page_source.encode("utf-8")
@@ -793,7 +794,7 @@ def update():
         connect_db()
         facilities = get_new_facilities(facilities)
         facilities = getGeoToFacilities(facilities)
-        # facilities = getPhoneUrlToFacilities(facilities)
+        facilities = getPhoneUrlToFacilities(facilities)
         update_db(availabilities, facilities)
         logger.info(
             "------------------------------------------------End------------------------------------------------"
