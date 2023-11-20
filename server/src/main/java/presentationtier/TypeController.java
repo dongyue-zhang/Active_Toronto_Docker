@@ -32,11 +32,10 @@ public class TypeController extends GenericController<TypeFacade>{
 				{	
 					String searchBy = request.getParameter("q");
 					PaginatedContent<TypeContent> contents = null;
-					if (searchBy != null) {
-						contents = facade.processSearching(searchBy, lang, page, size);
-					} else {
+					if (searchBy == null || searchBy.equals("")) {
 						contents = facade.processGetAll(path, request.getParameter("sort"), lang, page, size);
-						
+					} else {
+						contents = facade.processSearching(searchBy, lang, page, size);
 					}
 					responsePaginatedContent(response, contents);
 					break;

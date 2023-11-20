@@ -36,7 +36,7 @@ public class DataSource implements ServletContextListener{
 				  .build();
 		SessionFactory sessionFactory = new MetadataSources(standardServiceRegistry).buildMetadata().buildSessionFactory();
     	return sessionFactory;
-    }
+    } 
     
     public static Session getSession() {
     	if (session == null || !session.isOpen()) {

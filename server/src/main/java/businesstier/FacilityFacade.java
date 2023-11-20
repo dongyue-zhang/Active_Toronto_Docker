@@ -79,7 +79,7 @@ public class FacilityFacade extends GenericFacade{
 			//cacheContents(path, facilityContents, contents); 
 		//}
 		
-		if ( sortBy == null || sortBy.equals("title")) {
+		if ( sortBy == null || sortBy == "" || sortBy.equals("title")) {
 			sortByDefault(contents);
 		} else if (sortBy.equals("distance")) {
 			contents.sort(Comparator.comparingDouble(FacilityContent::getDistance));
