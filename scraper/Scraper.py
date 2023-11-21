@@ -793,9 +793,10 @@ def update():
         facilities = getOriginalFacilities(availabilities)
         connect_db()
         facilities = get_new_facilities(facilities)
-        facilities = getGeoToFacilities(facilities)
-        facilities = getPhoneUrlToFacilities(facilities)
-        update_db(availabilities, facilities)
+        if (len(facilities) != 0 ):
+            facilities = getGeoToFacilities(facilities)
+            facilities = getPhoneUrlToFacilities(facilities)
+            update_db(availabilities, facilities)
         logger.info(
             "------------------------------------------------End------------------------------------------------"
         )
