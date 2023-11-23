@@ -17,7 +17,7 @@ services:
     restart: always
     build: ./init/
     volumes:
-      - ./init:/docker-entrypoint-initdb.d
+      - ./init:/var/lib/mysql
     networks:
       active-docker-network:
   server:
@@ -48,4 +48,3 @@ services:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     networks:
       active-docker-network:
-
