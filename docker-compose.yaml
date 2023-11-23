@@ -5,7 +5,6 @@ networks:
 services:
   mysqldb:
     container_name: active-mysql
-    image: mysql:8.0.25
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
@@ -17,7 +16,7 @@ services:
     restart: always
     build: ./init/
     volumes:
-      - ./init:/var/lib/mysql
+      - mount: source=mysqlvol, target=/var/lib/mysql
     networks:
       active-docker-network:
   server:
