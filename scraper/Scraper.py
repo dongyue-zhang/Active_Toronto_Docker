@@ -269,8 +269,7 @@ def getGeo(facility):
 
 
 def getPhoneUrlToFacilities(facilities):
-    facility['phone'] = None
-    facility['url'] = None
+    
     logger.info("Start getting phone numbers and urls for facilities...")
     try:
         # get recreation list
@@ -306,6 +305,8 @@ def getPhoneUrlToFacilities(facilities):
                 "Getting phone number and urls for facility: "
                 + facility["facility_name"]
             )
+            facility['phone'] = None
+            facility['url'] = None
             for phone in phoneList:
                 if facility["facility_name"] == phone["Name"]:
                     facility["phone"] = phone["phone"]
