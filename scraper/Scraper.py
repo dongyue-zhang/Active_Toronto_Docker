@@ -14,9 +14,11 @@ from bs4 import BeautifulSoup
 from decouple import config
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
+import argparse
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
 HOST = 'mysqldb'
+# HOST = '143.198.57.221'
 DBUSER = config('MYSQL_USER')
 PASSWORD = config('MYSQL_PASSWORD')
 DATABASE = config('MYSQL_DATABASE')
