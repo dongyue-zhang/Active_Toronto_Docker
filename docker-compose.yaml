@@ -5,6 +5,7 @@ networks:
 services:
   mysqldb:
     container_name: active-mysql
+    image: mysql:8.0.35
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
