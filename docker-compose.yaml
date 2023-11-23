@@ -49,4 +49,6 @@ services:
     networks:
       active-docker-network:
 
-volumes: mysqlvol
+volumes:
+  mysqlvol:
+    external: true
