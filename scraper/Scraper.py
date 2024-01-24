@@ -301,7 +301,7 @@ def getPhoneUrlToFacilities(facilities):
         #     )
 
         phoneList = []
-        with open("FacilitiyList.txt") as file:
+        with open("FacilityList.txt") as file:
             for line in file:
                 line = line.strip()
                 dicts = line.split(', ')
