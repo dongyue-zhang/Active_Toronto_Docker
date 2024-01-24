@@ -36,10 +36,14 @@ public class FacilityController extends GenericController<FacilityFacade>{
 			case __GetAll: {
 				
 				String searchBy = request.getParameter("q");
+				String sortBy = request.getParameter("sort");
+				if (sortBy == null || sortBy == "") {
+					sortBy = "title";
+				}
 				PaginatedContent<FacilityContent> contents = null;
 				if (searchBy == null || searchBy.equals("")) {
 					
-					contents = facade.processGetAll(path, request.getParameter("sort"), lang, page, size);
+					contents = facade.processGetAll(path, sortBy, lang, page, size);
 				} else {
 					contents = facade.processSearching(searchBy, lang, page, size);
 				}
