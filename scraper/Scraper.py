@@ -15,6 +15,7 @@ from decouple import config
 # from selenium import webdriver
 # from selenium.webdriver.firefox.service import Service
 import argparse
+import schedule
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
 HOST = 'mysqldb'
