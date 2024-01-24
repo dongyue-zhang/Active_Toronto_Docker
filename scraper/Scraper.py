@@ -9,11 +9,11 @@ from datetime import datetime
 import mysql.connector as MySQL
 import pandas as pd
 import requests
-import schedule
+# import schedule
 from bs4 import BeautifulSoup
 from decouple import config
-from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
+# from selenium import webdriver
+# from selenium.webdriver.firefox.service import Service
 import argparse
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
@@ -25,9 +25,7 @@ DATABASE = config('MYSQL_DATABASE')
 GOOGLE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json?address="
 PROVINCE = "Ontario"
 RESOURCE_API = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=da46e4ac-d4ab-4b1c-b139-6362a0a43b3c"
-FACILITY_LIST_URL = (
-    "https://www.toronto.ca/data/parks/prd/facilities/recreationcentres/index.html"
-)
+FACILITY_LIST_URL = "https://www.toronto.ca/data/parks/prd/facilities/recreationcentres/index.html"
 CITY_OF_TORONTO_URL = "https://www.toronto.ca"
 FACILITY_URL_PREFIX = "https://www.toronto.ca/data/parks/prd/facilities/complex/"
 LOCATIONS = "Locations"
@@ -276,30 +274,38 @@ def getPhoneUrlToFacilities(facilities):
     try:
         # get recreation list
         logger.info("Getting recreation list from {}".format(FACILITY_LIST_URL))
-        option = webdriver.FirefoxOptions()
-        service = Service()
-        option.add_argument("--no-sandbox")
-        option.add_argument("--headless")
-        option.add_argument("--disable-infobars")
-        option.add_argument("--disable-dev-shm-usage")
-        driver = webdriver.Firefox(service=service, options=option)
-        driver.get(FACILITY_LIST_URL)
-        time.sleep(1)
-        html = driver.page_source.encode("utf-8")
-        driver.quit()
+        # option = webdriver.FirefoxOptions()
+        # service = Service()
+        # option.add_argument("--no-sandbox")
+        # # option.add_argument("--headless")
+        # option.add_argument("--disable-infobars")
+        # option.add_argument("--disable-dev-shm-usage")
+        # driver = webdriver.Firefox(service=service, options=option)
+        # driver.get(FACILITY_LIST_URL)
+        # time.sleep(1)
+        # html = driver.page_source.encode("utf-8")
+        # driver.quit()
 
-        soup = BeautifulSoup(html, "lxml")
-        table = soup.find("div", attrs={"class": "pfrListing"})
-        trs = table.table.tbody.find_all("tr")
+        # soup = BeautifulSoup(html, "lxml")
+        # print(soup)
+        # table = soup.find("div", attrs={"class": "pfrListing"})
+        # trs = table.table.tbody.find_all("tr")
+        # phoneList = []
+        # for tr in trs:
+        #     a = tr.find("th", attrs={"data-info": "Name"}).a
+        #     name = a.text.strip()
+        #     url = a.get("href")
+        #     phone = tr.find("td", attrs={"data-info": "Phone"}).text.strip()
+        #     phoneList.append(
+        #         {"Name": name, "phone": phone, "url": CITY_OF_TORONTO_URL + url}
+        #     )
+
         phoneList = []
-        for tr in trs:
-            a = tr.find("th", attrs={"data-info": "Name"}).a
-            name = a.text.strip()
-            url = a.get("href")
-            phone = tr.find("td", attrs={"data-info": "Phone"}).text.strip()
-            phoneList.append(
-                {"Name": name, "phone": phone, "url": CITY_OF_TORONTO_URL + url}
-            )
+        with open("FacilitiyList.txt") as file:
+            for line in file:
+                line = line.strip()
+                dicts = line.split(', ')
+                phoneList.append({dicts[0].split(': ')[0].strip("{").strip("'") : dicts[0].split(': ')[1].strip("'").strip('"'), dicts[1].split(': ')[0].strip("'") : dicts[1].split(': ')[1].strip("'"), dicts[2].split(': ')[0].strip("'") : dicts[2].split(': ')[1].strip("}").strip("'")})
 
         # if a facility is not on the list, get phone number from its website
         for facility in facilities:
@@ -800,6 +806,7 @@ def update():
             facilities = getGeoToFacilities(facilities)
             facilities = getPhoneUrlToFacilities(facilities)
             update_db(availabilities, facilities)
+        
         logger.info(
             "------------------------------------------------End------------------------------------------------"
         )
