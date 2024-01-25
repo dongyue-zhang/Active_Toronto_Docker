@@ -42,7 +42,7 @@ public class DataSource implements ServletContextListener{
     	if (session == null || !session.isOpen()) {
     		session = FACTORY.openSession();
     	}
-    	return FACTORY.getCurrentSession();
+    	return session;
         
     }
     
