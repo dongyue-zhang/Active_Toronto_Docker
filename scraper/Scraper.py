@@ -230,7 +230,7 @@ def getOriginalFacilities(availablities):
                             "street": street,
                             "province": PROVINCE,
                             "postal_code": locat[7],
-                            "phone":'000-000-0000',
+                            "phone": None,
                             "url": 'www.url.com',
                         }
                     )
@@ -319,7 +319,7 @@ def getPhoneUrlToFacilities(facilities):
                 + facility["facility_name"]
             )
             facility['phone'] = None
-            facility['url'] = None
+            # facility['url'] = None
             for phone in phoneList:
                 if facility["facility_name"] == phone["Name"]:
                     facility["phone"] = phone["phone"]
@@ -329,18 +329,21 @@ def getPhoneUrlToFacilities(facilities):
 
             if facility["phone"] is None:
                 url = FACILITY_URL_PREFIX + str(facility["location_id"]) + "/index.html"
-                facility["url"] = url
                 r = requests.get(url=url)
-                html = r.text
-                soup = BeautifulSoup(html, "lxml")
-                li = (
-                    soup.find("div", attrs={"id": "pfr_complex_loc"})
-                    .find("ul")
-                    .find("li")
-                )
-                if "Phone" in li.text.strip():
-                    facility["phone"] = li.text.strip().split(":")[1].strip()
-                    logger.info("Got phone number for" + facility["facility_name"])
+                if r.status_code == 200:
+                    facility["url"] = url
+                    html = r.text
+                    soup = BeautifulSoup(html, "lxml")
+                    li = (
+                        soup.find("div", attrs={"id": "pfr_complex_loc"})
+                        .find("ul")
+                        .find("li")
+                    )
+                    if "Phone" in li.text.strip():
+                        facility["phone"] = li.text.strip().split(":")[1].strip()
+                        logger.info("Got phone number for " + facility["facility_name"])
+                else: 
+                    facility["phone"] = '000-000-0000'
 
         sorted(facilities, key=lambda x: x["location_id"])
         return facilities
