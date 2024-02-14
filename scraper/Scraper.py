@@ -18,11 +18,16 @@ import argparse
 import schedule
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
-HOST = 'mysqldb'
+# HOST = 'mysqldb'
 # HOST = '143.198.57.221'
-DBUSER = config('MYSQL_USER')
-PASSWORD = config('MYSQL_PASSWORD')
-DATABASE = config('MYSQL_DATABASE')
+# DBUSER = config('MYSQL_USER')
+# PASSWORD = config('MYSQL_PASSWORD')
+# DATABASE = config('MYSQL_DATABASE')
+HOST = 'localhost'
+DBUSER = 'root'
+PASSWORD = 'zdy15994357865'
+DATABASE = 'active'
+
 GOOGLE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json?address="
 PROVINCE = "Ontario"
 RESOURCE_API = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=da46e4ac-d4ab-4b1c-b139-6362a0a43b3c"
@@ -60,7 +65,7 @@ FIND_CATEGORY_BY_DESC = "SELECT * FROM `category` INNER JOIN `translation` ON `c
 
 
 # primary keys for tables
-language_id = "En"
+language_id = "en"
 city_id = 2
 translation_id = 0
 category_id = 0
