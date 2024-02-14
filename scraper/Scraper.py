@@ -9,25 +9,16 @@ from datetime import datetime
 import mysql.connector as MySQL
 import pandas as pd
 import requests
-# import schedule
+import schedule
 from bs4 import BeautifulSoup
 from decouple import config
-# from selenium import webdriver
-# from selenium.webdriver.firefox.service import Service
 import argparse
-import schedule
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
-# HOST = 'mysqldb'
-# HOST = '143.198.57.221'
-# DBUSER = config('MYSQL_USER')
-# PASSWORD = config('MYSQL_PASSWORD')
-# DATABASE = config('MYSQL_DATABASE')
-HOST = 'localhost'
-DBUSER = 'root'
-PASSWORD = 'zdy15994357865'
-DATABASE = 'active'
-
+HOST = 'mysqldb'
+DBUSER = config('MYSQL_USER')
+PASSWORD = config('MYSQL_PASSWORD')
+DATABASE = config('MYSQL_DATABASE')
 GOOGLE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json?address="
 PROVINCE = "Ontario"
 RESOURCE_API = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=da46e4ac-d4ab-4b1c-b139-6362a0a43b3c"
@@ -60,7 +51,7 @@ FIND_FACILITY_BY_LOCATION_ID = "SELECT `facility_id` FROM `reference_facility_lo
 FIND_ACTIVITY_BY_ID = "SELECT * FROM `activity` WHERE `id` = %s;"
 FIND_TYPE_BY_DESC = "SELECT * FROM `type` INNER JOIN `translation` ON `type`.title_translation_id = `translation`.id INNER JOIN `language_translation` ON `translation`.id = `language_translation`.translation_id WHERE description = %s"
 FIND_CATEGORY_BY_DESC = "SELECT * FROM `category` INNER JOIN `translation` ON `category`.title_translation_id = `translation`.id INNER JOIN `language_translation` ON `translation`.id = `language_translation`.translation_id WHERE description = %s"
-
+FIND_TRANSLATION_BY_DESC = "SELECT * FROM `language_translation` WHERE description = %s"
 # global mydb
 
 
@@ -74,12 +65,6 @@ activity_id = 0
 address_id = 0
 facility_id = 0
 country = "Canada"
-
-# # control varialbles for iterations
-# category = ''
-# type = ''
-# activity = ''
-# facility = ''
 
 
 # row affected counting for insertions
@@ -167,12 +152,12 @@ def getAvalibilities():
                 if dropin["Age Min"] != "None":
                     availability["age_min"] = dropin["Age Min"]
                 else:
-                    availability["age_min"] = None
+                    availability["age_min"] = 0
 
                 if dropin["Age Max"] != "None":
                     availability["age_max"] = dropin["Age Max"]
                 else:
-                    availability["age_max"] = None
+                    availability["age_max"] = 0
 
                 availabilities.append(availability)
         availabilities = sorted(
@@ -215,14 +200,28 @@ def getOriginalFacilities(availablities):
         for locationID in locationIDs:
             for locat in locationList:
                 if locationID == locat[0]:
-                    street = (
-                        str(locat[3])
-                        + str(locat[4])
-                        + " "
-                        + str(locat[5])
-                        + " "
-                        + str(locat[6])
-                    )
+                    if locat[3] != 'None':
+                        street_no = ' ' + locat[3]
+                    else:
+                        street_no = ''
+                    
+                    if str(locat[4]) != 'None':
+                        street_suffix = " " + str(locat[4])
+                    else:
+                        street_suffix = ''
+
+                    if locat[5] != 'None':
+                        street_name = ' ' + locat[5]
+                    else:
+                        street_name = ''
+
+                    if locat[6] != 'None':
+                        street_type = ' ' + locat[6]
+                    else:
+                        street_type = ''
+
+                    street = street_no + street_suffix + street_name + street_type
+                    print(street)
                     facilitiesNoGeo.append(
                         {
                             "location_id": locat[0],
@@ -231,8 +230,8 @@ def getOriginalFacilities(availablities):
                             "street": street,
                             "province": PROVINCE,
                             "postal_code": locat[7],
-                            "phone": None,
-                            "url": None,
+                            "phone":'000-000-0000',
+                            "url": 'www.url.com',
                         }
                     )
 
@@ -393,6 +392,16 @@ def category_exists(category):
     cursor.close()
     return category_id
 
+def description_exists(desc):
+    description_id = 0
+    cursor = mydb.cursor()
+    cursor.execute(FIND_TRANSLATION_BY_DESC, (desc,))
+    rows = cursor.fetchall()
+    if len(rows) != 0:
+        description_id = rows[0][0]
+    cursor.close()
+    return description_id
+
 
 def get_new_facilities(facilities):
     logger.info("Getting new facilities...")
@@ -425,15 +434,6 @@ def update_db(availabilities, facilities):
 
 
 def insert_data_to_empty_db(availablities, facilities):
-    # # primary keys for tables
-    # language_id = 'En'
-    # city_id = 2
-    # translation_id = 0
-    # category_id = 0
-    # type_id = 0
-    # activity_id = 0
-    # address_id = 0
-    # facility_id = 0
 
     # control varialbles for iterations
     category = ""
@@ -441,18 +441,6 @@ def insert_data_to_empty_db(availablities, facilities):
     activity = ""
     facility = ""
     country = "Canada"
-
-    # # row affected counting for insertions
-    # row_affected_traslation = 0
-    # row_affected_language_traslation = 0
-    # row_affected_facility = 0
-    # row_affected_categoty = 0
-    # row_affected_type = 0
-    # row_affected_activity = 0
-    # row_affected_availability = 0
-    # row_affected_address = 0
-    # row_affected_activity_facility = 0
-    # row_affected_reference_facility_locationorigin = 0
 
     logger.info("Connecting to MySQL...")
     try:
@@ -549,16 +537,18 @@ def insert_new_facility(facility):
     global city_id, country, language_id
     global row_affected_traslation, row_affected_language_traslation, row_affected_address, row_affected_traslation, row_affected_facility, row_affected_language_traslation, row_affected_reference_facility_locationorigin
 
-    # insert a new row into Table Translation
-    translation_id = executeInsertSQL(TRANSLATION_SQL, None)
-    row_affected_traslation += 1
-    logger.info("Inserted a new Translation: " + str(translation_id))
+    translation_id = description_exists(street)
+    if translation_id == 0:
+        # insert a new row into Table Translation
+        translation_id = executeInsertSQL(TRANSLATION_SQL, None)
+        row_affected_traslation += 1
+        logger.info("Inserted a new Translation: " + str(translation_id))
 
-    # insert a new row into Table Language_Translation
-    language_translation_val = (translation_id, language_id, street)
-    executeInsertSQL(LANGUAGE_TRANSLATION_SQL, language_translation_val)
-    row_affected_language_traslation += 1
-    logger.info("Inserted a new Language_Translation: " + street)
+        # insert a new row into Table Language_Translation
+        language_translation_val = (translation_id, language_id, street)
+        executeInsertSQL(LANGUAGE_TRANSLATION_SQL, language_translation_val)
+        row_affected_language_traslation += 1
+        logger.info("Inserted a new Language_Translation: " + street)
 
     # insert a new row into Table Address
     address_val = (translation_id, city, province, postal_code, country, lat, lng)
@@ -596,16 +586,18 @@ def insert_new_facility(facility):
 
 def insert_new_category(new_category):
     global city_id, row_affected_traslation, row_affected_language_traslation, row_affected_categoty
-    # insert a new row into Table Translation
-    translation_id = executeInsertSQL(TRANSLATION_SQL, None)
-    row_affected_traslation += 1
-    logger.info("Inserted a new Translation: " + str(translation_id))
+    translation_id = description_exists(new_category)
+    if translation_id == 0:
+        # insert a new row into Table Translation
+        translation_id = executeInsertSQL(TRANSLATION_SQL, None)
+        row_affected_traslation += 1
+        logger.info("Inserted a new Translation: " + str(translation_id))
 
-    # insert a new row into Table Languge_Translation
-    language_translation_val = (translation_id, language_id, new_category)
-    executeInsertSQL(LANGUAGE_TRANSLATION_SQL, language_translation_val)
-    row_affected_language_traslation += 1
-    logger.info("Inserted a new Language_Translation: " + new_category)
+        # insert a new row into Table Languge_Translation
+        language_translation_val = (translation_id, language_id, new_category)
+        executeInsertSQL(LANGUAGE_TRANSLATION_SQL, language_translation_val)
+        row_affected_language_traslation += 1
+        logger.info("Inserted a new Language_Translation: " + new_category)
 
     # insert a new row into Table Category
     category_val = (city_id, translation_id)
@@ -620,16 +612,19 @@ def insert_new_category(new_category):
 
 def insert_new_type(new_type, category_id):
     global row_affected_traslation, row_affected_language_traslation, row_affected_type
-    # insert a new row into Table Translation
-    translation_id = executeInsertSQL(TRANSLATION_SQL, None)
-    row_affected_traslation += 1
-    logger.info("Inserted a new Translation: " + str(translation_id))
+    
+    translation_id = description_exists(new_type)
+    if translation_id == 0:
+        # insert a new row into Table Translation
+        translation_id = executeInsertSQL(TRANSLATION_SQL, None)
+        row_affected_traslation += 1
+        logger.info("Inserted a new Translation: " + str(translation_id))
 
-    # insert a new row into Table Languge_Translation
-    language_translation_val = (translation_id, language_id, new_type)
-    executeInsertSQL(LANGUAGE_TRANSLATION_SQL, language_translation_val)
-    row_affected_language_traslation += 1
-    logger.info("Inserted a new Language_Translation: " + new_type)
+        # insert a new row into Table Languge_Translation
+        language_translation_val = (translation_id, language_id, new_type)
+        executeInsertSQL(LANGUAGE_TRANSLATION_SQL, language_translation_val)
+        row_affected_language_traslation += 1
+        logger.info("Inserted a new Language_Translation: " + new_type)
 
     # insert a new row into Table Type
     type_val = (category_id, translation_id)
@@ -642,16 +637,19 @@ def insert_new_type(new_type, category_id):
 
 def insert_new_activity(new_activity, activity_id, type_id, facility_id):
     global row_affected_traslation, row_affected_language_traslation, row_affected_activity, row_affected_activity_facility
-    # insert a new row into Table Translation
-    translation_id = executeInsertSQL(TRANSLATION_SQL, None)
-    row_affected_traslation += 1
-    logger.info("Inserted a new Translation: " + str(translation_id))
 
-    # insert a new row into Table Languge_Translation
-    language_translation_val = (translation_id, language_id, new_activity)
-    executeInsertSQL(LANGUAGE_TRANSLATION_SQL, language_translation_val)
-    row_affected_language_traslation += 1
-    logger.info("Inserted a new Language_Translation: " + new_activity)
+    translation_id = description_exists(new_activity)
+    if translation_id == 0:
+        # insert a new row into Table Translation
+        translation_id = executeInsertSQL(TRANSLATION_SQL, None)
+        row_affected_traslation += 1
+        logger.info("Inserted a new Translation: " + str(translation_id))
+
+        # insert a new row into Table Languge_Translation
+        language_translation_val = (translation_id, language_id, new_activity)
+        executeInsertSQL(LANGUAGE_TRANSLATION_SQL, language_translation_val)
+        row_affected_language_traslation += 1
+        logger.info("Inserted a new Language_Translation: " + new_activity)
 
     # insert a new row into Table Activity
     activity_val = (activity_id, type_id, translation_id)
@@ -811,7 +809,7 @@ def update():
         if (len(facilities) != 0 ):
             facilities = getGeoToFacilities(facilities)
             facilities = getPhoneUrlToFacilities(facilities)
-            update_db(availabilities, facilities)
+        update_db(availabilities, facilities)
         
         logger.info(
             "------------------------------------------------End------------------------------------------------"
@@ -821,7 +819,7 @@ def update():
 
 
 if __name__ == "__main__":
-    time.sleep(60)
+    time.sleep(30)
     update()
     schedule.every().saturday.at("02:00").do(update)
     while 1:
