@@ -19,7 +19,7 @@
 
 UNLOCK TABLES;
 CREATE DATABASE IF NOT EXISTS `active`;
-USE active;
+USE `active`;
 SET TIME_ZONE='-05:00';
 
 -- CREATE USER 'admin'@'%' IDENTIFIED BY 'password';
