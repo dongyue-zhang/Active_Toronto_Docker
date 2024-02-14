@@ -319,7 +319,7 @@ def getPhoneUrlToFacilities(facilities):
                 + facility["facility_name"]
             )
             facility['phone'] = None
-            # facility['url'] = None
+            facility['url'] = ''
             for phone in phoneList:
                 if facility["facility_name"] == phone["Name"]:
                     facility["phone"] = phone["phone"]
