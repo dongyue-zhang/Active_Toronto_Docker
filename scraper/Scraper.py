@@ -328,6 +328,7 @@ def getPhoneUrlToFacilities(facilities):
                     break
 
             if facility["phone"] is None:
+                facility['phone'] = '000-000-0000'
                 url = FACILITY_URL_PREFIX + str(facility["location_id"]) + "/index.html"
                 r = requests.get(url=url)
                 if r.status_code == 200:
@@ -342,8 +343,8 @@ def getPhoneUrlToFacilities(facilities):
                     if "Phone" in li.text.strip():
                         facility["phone"] = li.text.strip().split(":")[1].strip()
                         logger.info("Got phone number for " + facility["facility_name"])
-                else: 
-                    facility["phone"] = '000-000-0000'
+                # else: 
+                #     facility["phone"] = '000-000-0000'
 
         sorted(facilities, key=lambda x: x["location_id"])
         return facilities
@@ -424,8 +425,9 @@ def update_db(availabilities, facilities):
             for facility in facilities:
                 insert_new_facility(facility)
         mydb.commit()
-
-        store_new_availabilities(availabilities)
+        
+        if len(availabilities) != 0:
+            store_new_availabilities(availabilities)
 
         mydb.commit()
         log_rows_affected()
