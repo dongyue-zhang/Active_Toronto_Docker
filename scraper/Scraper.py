@@ -201,7 +201,7 @@ def getOriginalFacilities(availablities):
             for locat in locationList:
                 if locationID == locat[0]:
                     if locat[3] != 'None':
-                        street_no = ' ' + locat[3]
+                        street_no = locat[3]
                     else:
                         street_no = ''
                     
