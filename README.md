@@ -1,5 +1,8 @@
-ActiveTO
-Drop-In Activities at City of Toronto Recreation Facilities
+<div align="center">
+  <h3 align="center">ActiveTO</h3>
+  <p align="center">Drop-In Activities at City of Toronto Recreation Facilities
+</p>
+</div>
 
 ## About the app
 Active is a mobile application that allows users to browse and search drop-in activities at City of Toronto Recreation Facilities.
