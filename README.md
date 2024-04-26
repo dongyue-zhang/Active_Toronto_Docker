@@ -24,7 +24,7 @@ While an open resource API exists for Toronto's recreation facilities and activi
 ### available city: toronto
 
 It provides in total 15 HTTP endpoints:
-![Screenshot 2024-04-22 at 8 08 34 PM](https://github.com/dongyue-zhang/Active_Toronto_Docker/assets/93807577/e34174b3-7703-484c-a830-a101f63f6ae3)
+![Screenshot 2024-04-26 at 12 32 59 AM](https://github.com/dongyue-zhang/Active_Toronto_Docker/assets/93807577/d0c7f9a0-baa8-43d3-bc09-926dfd59fd7d)
 
 ## Usage sample
 To explore all available types of activities, simply enter "http://159.89.121.107:8080/toronto/types" ("/{city}/types") into your browser's address bar. This will provide you with a dataset of activities in JSON format. From there, you can select specific activity types for further information. Simply substitute {id} with your desired type ID in the second endpoint ("/{city}/types/{id}").
