@@ -6,6 +6,7 @@ import com.example.active.business.domain.enums.LanguageFilterEnum;
 import com.example.active.business.domain.enums.TypeSortEnum;
 import com.example.active.business.domain.paramobject.TypeParams;
 import com.example.active.business.service.TypeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Validated
 @RestController
 @RequestMapping(value = "/{city}")
+@Tag(name="Type")
 public class TypeController {
 
     @Autowired

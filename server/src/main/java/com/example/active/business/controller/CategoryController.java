@@ -5,6 +5,7 @@ import com.example.active.business.domain.enums.CityFilterEnum;
 import com.example.active.business.domain.enums.LanguageFilterEnum;
 import com.example.active.business.domain.paramobject.CategoryParams;
 import com.example.active.business.service.CategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Validated
 @RestController
 @RequestMapping(value = "/{city}")
+@Tag(name="Category")
 public class CategoryController {
 
     @Autowired

@@ -7,11 +7,13 @@ import com.example.active.business.domain.enums.LanguageFilterEnum;
 import com.example.active.business.domain.paramobject.ActivityParams;
 import com.example.active.business.service.ActivityService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -31,13 +33,13 @@ import java.util.Optional;
 @Validated
 @RestController
 @RequestMapping(value = "/{city}")
-
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
         @ApiResponse(responseCode = "404", description = "Not found - The activity was not found"),
         @ApiResponse(responseCode = "401", description = "Bad Request")
 })
 @ApiOperation(value = "Activities", nickname = "Activity")
+@Tag(name="Activity")
 public class ActivityController {
     @Autowired
     @Qualifier("activityService")

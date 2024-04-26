@@ -10,7 +10,9 @@ import java.util.Locale;
 
 @SpringBootApplication
 @OpenAPIDefinition(info =
-@Info(title = "ActiveTO API", version = "1.0", description = "A open source API that allows users to browse and search drop-in activities at City of Toronto Recreation Facilities.",
+@Info(title = "ActiveTO API", version = "1.0", description = "A open source API that allows users to browse and search drop-in activities at City of Toronto Recreation Facilities.\r\n" +
+		"API path: http://159.89.121.107/apps/activeto \n" +
+		"** Available city: toronto",
 		contact = @Contact(name = "Dongyue Zhang", url = "https://github.com/dongyue-zhang", email = "zhangdongyue22@gmail.com")))
 public class ActiveApplication {
 	public static void main(String[] args) {
